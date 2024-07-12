@@ -3,15 +3,17 @@ import { LoadScript, Autocomplete } from '@react-google-maps/api';
 import { z } from 'zod';
 import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
+import { useWeatherStore, weather_schema } from '../zustand/store';
 
 const libraries: ['places'] = ['places'];
-const googleMapsApiKey = import.meta.env.GOOGLE_PLACES_API_KEY;
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
 
 export const GooglePlacesAutocomplete: React.FC = () => {
   const [address, setAddress] = useState<string>('');
   const [lat, setLat] = useState<number | null>(null);
   const [lng, setLng] = useState<number | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const { setWeather } = useWeatherStore();
 
   useEffect(() => {
     if (!lat) return;
@@ -21,15 +23,18 @@ export const GooglePlacesAutocomplete: React.FC = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((response) => {
-      console.log(response);
-    });
+    })
+    .then(({ data }) => {
+      const weather_data = weather_schema.parse(data);
+      setWeather(weather_data);
+    })
+    .catch(console.error);
   }, [lat, lng]);
 
   const onPlaceChanged = () => {
     if (!autocompleteRef.current) return;
 
-    // Googles own type here is wrong. (not wrong per se, but it didn't include | undefined)
+    // Google's own type here is wrong. (not wrong per se, but it didn't include `| undefined`)
     const place = autocompleteRef.current.getPlace() as google.maps.places.PlaceResult | undefined;
 
     if (place?.geometry?.location) {
@@ -45,7 +50,8 @@ export const GooglePlacesAutocomplete: React.FC = () => {
 
       const parse_result = Try(() =>
         z.string()
-          .regex(/^-?\d+\.\d+, *-?\d+\.\d+$/)
+          .trim()
+          .regex(/^-?\d+(\.\d+)?, *-?\d+(\.\d+)?$/)
           .transform((val) => val.split(',').map(parseFloat))
           .parse(value),
       );
@@ -60,26 +66,23 @@ export const GooglePlacesAutocomplete: React.FC = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
+    <LoadScript
+      googleMapsApiKey={googleMapsApiKey}
+      libraries={libraries}
+      loadingElement={<div>Loading...</div>}
+    >
       <Autocomplete
         onPlaceChanged={onPlaceChanged}
         onLoad={(autocomplete) => autocompleteRef.current = autocomplete}
       >
         <input
           type="search"
-          placeholder=""
+          placeholder="Enter an address or lat, lng"
           value={address}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
           style={{ width: '100%', padding: '12px', boxSizing: 'border-box' }}
         />
       </Autocomplete>
-      {(lat && lng) ? (
-        <div>
-          <h3>Coordinates</h3>
-          <p>Latitude: {lat}</p>
-          <p>Longitude: {lng}</p>
-        </div>
-      ) : null}
     </LoadScript>
   );
 };

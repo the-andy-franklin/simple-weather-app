@@ -54,8 +54,19 @@ export const weather_schema = z.object({
 	id: z.number(),
 	name: z.string(),
 	cod: z.number(),
-}).deepPartial();
-// I see that deepPartial got deprecated, but there's no context, no replacement, and it's still showing as valid in their docs,
-// so I'm gonna use it until it breaks or there's a better alternative
+}).deepPartial()
+	// I see that deepPartial got deprecated, but there's no context, no replacement, and it's still showing as valid in their docs,
+	// so I'm gonna use it until it breaks or until there's a better alternative
+	.transform((data) => ({
+		wind_speed: data.wind?.speed,
+		wind_deg: data.wind?.deg,
+		weather: data.weather?.[0]?.main,
+		icon: data.weather?.[0]?.icon,
+		clouds: data.clouds?.all,
+		temp: data.main?.temp,
+		feels_like: data.main?.feels_like,
+		pressure: data.main?.pressure,
+		humidity: data.main?.humidity,
+	}));
 
 export type Weather = z.infer<typeof weather_schema>;

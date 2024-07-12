@@ -1,6 +1,21 @@
+.navbar {
+  background: linear-gradient(
+    135deg,
+    #22c55e 0%,
+    #22c55e 65%,
+    #3b82f6 75%,
+    #a855f7 85%,
+    #ec4899 100%
+  );
+  text-shadow:
+    -1px -1px 0 #000,  
+    1px -1px 0 #000,  
+    -1px 1px 0 #000,  
+    1px 1px 0 #000;
+}
+
 #root {
   max-width: 1280px;
-  margin: 0 auto;
   text-align: center;
 }
 

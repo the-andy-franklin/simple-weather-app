@@ -24,21 +24,20 @@ app.post("/weather", async (c) => {
 	const { lat, lng } = parsed.data;
 
 	// redis is only being used during development, so I don't blow through my API limit
-	// this will be removed before submitting the final version
+	// it probably won't be needed/included in the final solution
 	const cache_key = `weather-${lat}-${lng}`;
-	const cached_weather = await redis.get(cache_key);
+	const cached_weather = await redis?.get(cache_key);
 	if (cached_weather) return c.json(JSON.parse(cached_weather));
 
-	const weather = await Try(() =>
+	const weather_response = await Try(() =>
 		axios.get(
-			`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${env.OPEN_WEATHER_MAP_API_KEY}`,
+			`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${env.OPEN_WEATHER_MAP_API_KEY}`,
 		).then(({ data }) => weather_schema.parse(data))
 	);
-	if (weather.failure) return c.json({ error: weather.error.message }, 500);
+	if (weather_response.failure) return c.json({ error: weather_response.error.message }, 500);
 
-	await redis.set(cache_key, JSON.stringify(weather.data), { ex: 3600 });
-
-	return c.json(weather.data);
+	await redis?.set(cache_key, JSON.stringify(weather_response.data), { ex: 60 * 60 * 4 });
+	return c.json(weather_response.data);
 });
 
 Deno.serve({ port: 3000 }, app.fetch);
