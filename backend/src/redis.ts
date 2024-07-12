@@ -1,4 +1,4 @@
-import { connect } from "https://deno.land/x/redis/mod.ts";
+import { connect } from "https://deno.land/x/redis@v0.32.4/mod.ts";
 
 export const redis = await connect({
 	hostname: "127.0.0.1",

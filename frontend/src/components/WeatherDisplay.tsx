@@ -22,8 +22,22 @@ export const WeatherDisplay: React.FC = () => {
   }, [weather]);
 
   return (
-    <div className="w-full h-full grid grid-cols-3 grid-rows-2 grid-flow-col justify-items-center gap-4 p-4 text-white">
-      <div className="w-full h-24 bg-pink-500 flex flex-col justify-center">
+    <div className="
+      w-full
+      h-full
+      grid
+      grid-cols-1
+      sm:grid-cols-2
+      sm:grid-rows-3
+      md:grid-cols-3
+      md:grid-rows-2
+      md:grid-flow-col
+      justify-items-center
+      gap-4
+      p-4
+      text-white"
+    >
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { weather.temp !== undefined &&
           <>
             <p className="text-lg">Temp</p>
@@ -32,7 +46,7 @@ export const WeatherDisplay: React.FC = () => {
           </>
         }
       </div>
-      <div className="w-full h-24 bg-yellow-500 flex flex-col justify-center">
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { weather.feels_like !== undefined &&
           <>
             <p className="text-lg">Feels Like</p>
@@ -41,19 +55,19 @@ export const WeatherDisplay: React.FC = () => {
           </>
         }
       </div>
-      <div className="w-full h-24 bg-gray-500 flex flex-col place-content-center">
-        {image && <img src={image} className="w-16 h-16 self-center" style={{ transform: `scale(1.5)` }} />}
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         {weather.weather}
+        {image && <img src={image} className="w-16 h-16 self-center" style={{ transform: `scale(1.5)` }} />}
       </div>
-      <div className="w-full h-full bg-purple-500 flex flex-col justify-center">
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { weather.clouds != null &&
           <>
-            <p className="text-lg">Clouds</p>
+            <p className="text-md mb-1">Cloud Coverage</p>
             <p className="text-2xl">{weather.clouds}%</p>
           </>
         }
       </div>
-      <div className="w-full h-full bg-green-500 flex flex-col justify-between p-2">
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { weather.wind_speed &&
           <>
             <p className="text-lg">Wind</p>
@@ -68,7 +82,7 @@ export const WeatherDisplay: React.FC = () => {
           </>
         }
       </div>
-      <div className="w-full h-24 bg-orange-500 flex flex-col p-2 place-content-center">
+      <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { weather.humidity &&
           <>
             <p className="text-lg">Humidity</p>

@@ -81,6 +81,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
           value={address}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
           style={{ width: '100%', padding: '12px', boxSizing: 'border-box' }}
+          className="rounded-t"
         />
       </Autocomplete>
     </LoadScript>

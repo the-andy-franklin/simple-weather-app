@@ -3,9 +3,9 @@ import { cors } from "hono/middleware.ts";
 import z from "zod";
 import axios from "axios";
 import { Try } from "fp-try";
-import { env } from "./env.ts";
-import { weather_schema } from "./types/open-weather-map-response.ts";
-import { redis } from "./redis.ts";
+import { env } from "../src/env.ts";
+import { weather_schema } from "../types/open-weather-map-response.ts";
+import { redis } from "../src/redis.ts";
 
 const app = new Hono();
 app.use(cors());
@@ -26,8 +26,10 @@ app.post("/weather", async (c) => {
 	// redis is only being used during development, so I don't blow through my API limit
 	// it probably won't be needed/included in the final solution
 	const cache_key = `weather-${lat}-${lng}`;
-	const cached_weather = await redis?.get(cache_key);
-	if (cached_weather) return c.json(JSON.parse(cached_weather));
+	if (redis) {
+		const cached_weather = await redis.get(cache_key);
+		if (cached_weather) return c.json(JSON.parse(cached_weather));
+	}
 
 	const weather_response = await Try(() =>
 		axios.get(
@@ -36,7 +38,7 @@ app.post("/weather", async (c) => {
 	);
 	if (weather_response.failure) return c.json({ error: weather_response.error.message }, 500);
 
-	await redis?.set(cache_key, JSON.stringify(weather_response.data), { ex: 60 * 60 * 4 });
+	if (redis) await redis.set(cache_key, JSON.stringify(weather_response.data), { ex: 60 * 60 * 4 });
 	return c.json(weather_response.data);
 });
 

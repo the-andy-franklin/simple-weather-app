@@ -1,9 +1,10 @@
 {
 	"tasks": {
-		"start": "deno run -A --watch --inspect-wait server.ts"
+		"dev": "deno run -A --watch --inspect-wait src/server.ts",
+		"start": "deno run -A src/server.ts"
 	},
 	"imports": {
-		"hono/": "https://deno.land/x/hono@v4.2.2/",
+		"hono/": "https://deno.land/x/hono@v4.3.11/",
 		"mongoose": "npm:mongoose",
 		"passport": "npm:passport",
 		"bcryptjs": "npm:bcryptjs",
@@ -20,7 +21,7 @@
 	},
 	"fmt": {
 		"lineWidth": 120,
-		"indentWidth": 4,
+		"indentWidth": 2,
 		"useTabs": true
 	},
 	"lint": {
