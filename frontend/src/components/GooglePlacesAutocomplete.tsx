@@ -40,10 +40,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
   if (!isLoaded) return null;
 
   const onPlaceChanged = () => {
-    if (!autocompleteRef.current) return;
-
-    // Google's own type here is wrong. (not wrong per se, but it didn't include `| undefined`)
-    const place = autocompleteRef.current.getPlace() as google.maps.places.PlaceResult | undefined;
+    const place = autocompleteRef.current?.getPlace();
 
     if (place?.geometry?.location) {
       const lat = place.geometry.location.lat();
@@ -53,7 +50,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
       setLng(lng);
       setAddress(place.formatted_address || '');
     } else {
-      const value = autocompleteRef.current.get('place')?.name;
+      const value = autocompleteRef.current?.get('place')?.name;
       if (!value) return;
 
       const parse_result = Try(() =>

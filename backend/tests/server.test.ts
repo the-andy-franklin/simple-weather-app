@@ -9,8 +9,6 @@ Deno.test("POST /weather", async () => {
 		.send({ lat: 34.0522, lng: -118.2437 })
 		.expect(200)
 		.expect((res) => {
-			console.log(res.text);
-
 			z.object({
 				name: z.literal("Los Angeles"),
 			}).parse(JSON.parse(res.text));

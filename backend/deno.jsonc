@@ -2,7 +2,7 @@
 	"tasks": {
 		"dev": "deno run -A --unstable-kv --watch --inspect-wait src/server.ts",
 		"start": "deno run -A --unstable-kv src/server.ts",
-		"test": "deno test --import-map=tests/unit.test.importmap.json -A tests/server.test.ts"
+		"test": "deno test --import-map=tests/unit.test.importmap.json -A --unstable-kv tests/server.test.ts"
 	},
 	"imports": {
 		"hono/": "https://deno.land/x/hono@v4.3.11/",
@@ -20,7 +20,10 @@
 	"fmt": {
 		"lineWidth": 120,
 		"indentWidth": 2,
-		"useTabs": true
+		"useTabs": true,
+		"files": {
+			"exclude": ["../README.md"]
+		}
 	},
 	"lint": {
 		"rules": {
