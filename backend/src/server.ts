@@ -11,6 +11,10 @@ const kv = await Deno.openKv();
 export const app = new Hono();
 app.use(cors());
 
+app.get("/health", (c) => {
+	return c.json({ status: "ok" });
+});
+
 app.post("/weather", async (c) => {
 	const body = await c.req.json();
 
