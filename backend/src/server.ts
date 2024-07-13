@@ -16,7 +16,6 @@ app.get("/health", (c) => {
 });
 
 app.post("/weather", async (c) => {
-	const start = performance.now();
 	const body = await c.req.json();
 
 	const parsed = Try(() =>
@@ -41,8 +40,6 @@ app.post("/weather", async (c) => {
 
 	await kv.set([lat, lng], JSON.stringify(weather_response.data), { expireIn: 1000 * 60 * 60 * 4 });
 
-	const end = performance.now();
-	console.log(`Request took ${end - start}ms`);
 	return c.json(weather_response.data);
 });
 
