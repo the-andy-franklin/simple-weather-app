@@ -1,7 +1,7 @@
 import { Hono } from "hono/mod.ts";
 import { cors } from "hono/middleware.ts";
-import { z } from "zod";
 import axios from "axios";
+import { z } from "zod";
 import { Try } from "fp-try";
 import { env } from "../src/env.ts";
 import { weather_schema } from "./validators/weather-schema.ts";

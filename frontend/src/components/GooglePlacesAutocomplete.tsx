@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LoadScript, Autocomplete } from '@react-google-maps/api';
+import { useJsApiLoader, Autocomplete } from '@react-google-maps/api';
 import { z } from 'zod';
 import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
@@ -19,7 +19,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
     if (!lat) return;
     if (!lng) return;
 
-    axios.post('http://localhost:3000/weather', { lat, lng }, {
+    axios.post<unknown>('http://localhost:3000/weather', { lat, lng }, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -30,6 +30,13 @@ export const GooglePlacesAutocomplete: React.FC = () => {
     })
     .catch(console.error);
   }, [lat, lng]);
+
+  // MARK: JS Loader
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey,
+    libraries,
+  });
+  if (!isLoaded) return null;
 
   const onPlaceChanged = () => {
     if (!autocompleteRef.current) return;
@@ -66,23 +73,17 @@ export const GooglePlacesAutocomplete: React.FC = () => {
   };
 
   return (
-    <LoadScript
-      googleMapsApiKey={googleMapsApiKey}
-      libraries={libraries}
-      loadingElement={<div>Loading...</div>}
+    <Autocomplete
+      onPlaceChanged={onPlaceChanged}
+      onLoad={(autocomplete) => autocompleteRef.current = autocomplete}
     >
-      <Autocomplete
-        onPlaceChanged={onPlaceChanged}
-        onLoad={(autocomplete) => autocompleteRef.current = autocomplete}
-      >
-        <input
-          type="search"
-          placeholder="Enter an address or lat, lng"
-          value={address}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
-          className="rounded-t w-full p-3 box-border"
-        />
-      </Autocomplete>
-    </LoadScript>
+      <input
+        type="search"
+        placeholder="Enter an address or lat, lng"
+        value={address}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+        className="rounded-t w-full p-3 box-border"
+      />
+    </Autocomplete>
   );
 };

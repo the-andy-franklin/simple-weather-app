@@ -3,6 +3,7 @@ import { connect } from "redis";
 export const redis = await connect({
 	hostname: "127.0.0.1",
 	port: 6379,
+	maxRetryCount: 0,
 })
 	.then((client) => {
 		console.log("Connected to Redis");

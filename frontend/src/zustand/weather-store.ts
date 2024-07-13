@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 
 export const weather_schema = z.object({
   wind_speed: z.number(),
@@ -19,16 +18,9 @@ export const useWeatherStore = create<{
   weather: Weather | null;
   setWeather: (weather: Weather) => void;
   clearData: () => void;
-}, [["zustand/persist", unknown]]>(
-  persist(
-    (set, get) => ({
-      weather: get()?.weather,
-      setWeather: (weather: Weather) => set({ weather }),
-      clearData: () => set({ weather: null }),
-    }),
-    {
-      name: 'weather_store',
-      storage: createJSONStorage(() => localStorage),
-    },
-  ),
+}>((set) => ({
+    weather: null,
+    setWeather: (weather: Weather) => set({ weather }),
+    clearData: () => set({ weather: null }),
+  }),
 );
