@@ -3,7 +3,7 @@ import { LoadScript, Autocomplete } from '@react-google-maps/api';
 import { z } from 'zod';
 import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
-import { useWeatherStore, weather_schema } from '../zustand/store';
+import { useWeatherStore, weather_schema } from '../zustand/weather-store';
 
 const libraries: ['places'] = ['places'];
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
@@ -80,8 +80,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
           placeholder="Enter an address or lat, lng"
           value={address}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
-          style={{ width: '100%', padding: '12px', boxSizing: 'border-box' }}
-          className="rounded-t"
+          className="rounded-t w-full p-3 box-border"
         />
       </Autocomplete>
     </LoadScript>

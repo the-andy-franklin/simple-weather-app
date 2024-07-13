@@ -55,8 +55,6 @@ export const weather_schema = z.object({
 	name: z.string(),
 	cod: z.number(),
 }).deepPartial()
-	// I see that deepPartial got deprecated, but there's no context, no replacement, and it's still showing as valid in their docs,
-	// so I'm gonna use it until it breaks or until there's a better alternative
 	.transform((data) => ({
 		wind_speed: data.wind?.speed,
 		wind_deg: data.wind?.deg,
@@ -67,6 +65,9 @@ export const weather_schema = z.object({
 		feels_like: data.main?.feels_like,
 		pressure: data.main?.pressure,
 		humidity: data.main?.humidity,
+		name: data.name,
 	}));
+// I see that deepPartial got deprecated, but there's no context, no replacement, and it's still listed as valid in their docs,
+// so I'm gonna keep using it until it breaks or until there's a better alternative
 
 export type Weather = z.infer<typeof weather_schema>;

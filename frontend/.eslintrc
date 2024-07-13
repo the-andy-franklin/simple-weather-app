@@ -18,6 +18,9 @@
 		"unused-imports"
 	],
 	"rules": {
+		// NOTE: I intentionally don't use Prettier because I think it's too opinionated,
+		// non-configurable, and actually makes the code uglier
+		
 		// syntax
 		"semi": ["warn", "always"],
 		"eqeqeq": ["warn", "smart"],
@@ -44,9 +47,6 @@
 		// typescript rules
 		"@typescript-eslint/indent": "off",
 		"@typescript-eslint/no-unused-vars": "off",
-		"@typescript-eslint/ban-ts-comment": "off",
-		"@typescript-eslint/no-explicit-any": "off",
-		"@typescript-eslint/no-empty-function": "off",
 
 		// empty line spacing
 		"eol-last": ["warn", "always"],

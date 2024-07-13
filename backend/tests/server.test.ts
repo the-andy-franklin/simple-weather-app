@@ -1,0 +1,16 @@
+import { z } from "zod";
+import { app } from "../src/server.ts";
+import { superdeno } from "https://deno.land/x/superdeno@4.9.0/mod.ts";
+
+Deno.test("POST /weather", async () => {
+	const request = superdeno(app.fetch);
+
+	await request.post("/weather")
+		.send({ lat: 34.0522, lng: -118.2437 })
+		.expect(200)
+		.expect((res) => {
+			z.object({
+				name: z.literal("Los Angeles"),
+			}).parse(JSON.parse(res.text));
+		});
+});

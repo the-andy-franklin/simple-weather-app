@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { load } from "dotenv";
 
-await load({ export: true });
+const env_vars = await load();
 
 export const env = z.object({
-	OPEN_WEATHER_MAP_API_KEY: z.string(),
-}).parse(Deno.env.toObject());
+	OPEN_WEATHER_MAP_API_KEY: z.string({ message: "OPEN_WEATHER_MAP_API_KEY is required" }),
+}).parse(env_vars);
