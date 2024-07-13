@@ -4,9 +4,10 @@ import { z } from 'zod';
 import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
 import { useWeatherStore, weather_schema } from '../zustand/weather-store';
+import { env } from '../env';
 
 const libraries: ['places'] = ['places'];
-const googleMapsApiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+const googleMapsApiKey = env.VITE_GOOGLE_PLACES_API_KEY;
 
 export const GooglePlacesAutocomplete: React.FC = () => {
   const [address, setAddress] = useState<string>('');
@@ -19,7 +20,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
     if (!lat) return;
     if (!lng) return;
 
-    axios.post<unknown>('http://localhost:3000/weather', { lat, lng }, {
+    axios.post<unknown>(`${env.VITE_API_URL}/weather`, { lat, lng }, {
       headers: {
         'Content-Type': 'application/json',
       },
