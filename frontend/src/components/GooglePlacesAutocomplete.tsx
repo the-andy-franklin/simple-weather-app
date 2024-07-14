@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useJsApiLoader, Autocomplete } from '@react-google-maps/api';
-import { z } from 'zod';
-import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
 import { useWeatherStore, weather_schema } from '../zustand/weather-store';
 import { env } from '../env';
@@ -48,24 +46,6 @@ export const GooglePlacesAutocomplete: React.FC = () => {
 
       setCoords({ lat, lng });
       setAddress(place.formatted_address ?? '');
-    } else {
-      const name = Try(() =>
-        z.string().parse(autocompleteRef.current?.get('place')?.name,
-      ));
-      if (name.failure) return;
-
-      const coordinates = Try(() =>
-        z.string()
-          .trim()
-          .regex(/^-?\d+(\.\d+)?, *-?\d+(\.\d+)?$/)
-          .transform((val) => val.split(/, */).map(parseFloat))
-          .parse(name.data),
-      );
-      if (coordinates.failure) return;
-      const [lat, lng] = coordinates.data;
-
-      setCoords({ lat, lng });
-      setAddress(name.data);
     }
   };
 
@@ -76,7 +56,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
     >
       <input
         type="search"
-        placeholder="Enter an address or lat, lng"
+        placeholder="Enter an address"
         value={address}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
         className="rounded-t w-full p-3 box-border"

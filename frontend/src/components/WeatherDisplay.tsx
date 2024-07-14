@@ -20,7 +20,6 @@ export const WeatherDisplay: React.FC = () => {
       md:grid-flow-col
       gap-4
       p-4
-      text-white
     ">
       <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { nonNullish(weather.temp) &&
@@ -41,7 +40,7 @@ export const WeatherDisplay: React.FC = () => {
         }
       </div>
       <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
-        {weather.weather}
+        <p className="text-lg">{weather.weather}</p>
         {weather.icon && (
           <img
             src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
@@ -53,7 +52,7 @@ export const WeatherDisplay: React.FC = () => {
       <div className="w-full h-24 bg-white rounded text-black flex flex-col justify-center">
         { nonNullish(weather.clouds) &&
           <>
-            <p className="text-md mb-1">Cloud Coverage</p>
+            <p className="text-lg">Cloud Coverage</p>
             <p className="text-2xl">{weather.clouds}%</p>
           </>
         }
@@ -69,7 +68,7 @@ export const WeatherDisplay: React.FC = () => {
                   style={{ rotate: `${weather.wind_deg}deg` }}
                 />
               }
-              <p className="flex items-end text-lg align-center flex items-center">{weather.wind_speed} mph</p>
+              <p className="flex items-end text-lg align-center items-center">{weather.wind_speed} mph</p>
             </div>
           </>
         }
@@ -78,9 +77,7 @@ export const WeatherDisplay: React.FC = () => {
         { nonNullish(weather.humidity) &&
           <>
             <p className="text-lg">Humidity</p>
-            <p className="text-2xl">
-              {weather.humidity}%
-            </p>
+            <p className="text-2xl">{weather.humidity}%</p>
           </>
         }
       </div>
