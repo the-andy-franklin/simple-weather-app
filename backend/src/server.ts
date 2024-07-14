@@ -27,7 +27,6 @@ app.post("/weather", async (c) => {
 	if (parsed.failure) return c.json({ error: parsed.error.message }, 400);
 	const { lat, lng } = parsed.data;
 
-	// KV-store is only being used during development so I don't blow through my API limit
 	const cached_weather = await kv.get<string>([lat, lng]);
 	if (cached_weather.value) return c.text(cached_weather.value);
 

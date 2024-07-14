@@ -48,7 +48,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
 
       setLat(lat);
       setLng(lng);
-      setAddress(place.formatted_address || '');
+      setAddress(place.formatted_address ?? '');
     } else {
       const value = autocompleteRef.current?.get('place')?.name;
       if (!value) return;
@@ -56,8 +56,8 @@ export const GooglePlacesAutocomplete: React.FC = () => {
       const parse_result = Try(() =>
         z.string()
           .trim()
-          .regex(/^-?\d+(\.\d+)?, *-?\d+(\.\d+)?$/)
-          .transform((val) => val.split(',').map(parseFloat))
+          .regex(/^-?\d+(\.\d+)?, ?-?\d+(\.\d+)?$/)
+          .transform((val) => val.split(/, ?/).map(parseFloat))
           .parse(value),
       );
 

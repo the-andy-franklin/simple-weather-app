@@ -1,5 +1,6 @@
 {
 	"env": {
+		"node": true,
 		"browser": true,
 		"es6": true
 	},
@@ -20,7 +21,7 @@
 	"rules": {
 		// NOTE: I intentionally don't use Prettier because I think it's too opinionated,
 		// non-configurable, and actually makes the code uglier
-		
+
 		// syntax
 		"semi": ["warn", "always"],
 		"eqeqeq": ["warn", "smart"],
