@@ -5,20 +5,20 @@ import { Try } from '@2or3godzillas/fp-try';
 import axios from 'axios';
 import { useWeatherStore, weather_schema } from '../zustand/weather-store';
 import { env } from '../env';
+import { isNullish } from '../utils/functions/isNullish';
 
 const libraries: ['places'] = ['places'];
 const googleMapsApiKey = env.VITE_GOOGLE_PLACES_API_KEY;
 
 export const GooglePlacesAutocomplete: React.FC = () => {
   const [address, setAddress] = useState<string>('');
-  const [lat, setLat] = useState<number | null>(null);
-  const [lng, setLng] = useState<number | null>(null);
+  const [{ lat, lng }, setCoords] = useState<{ lat?: number; lng?: number; }>({});
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const { setWeather } = useWeatherStore();
 
   useEffect(() => {
-    if (!lat) return;
-    if (!lng) return;
+    if (isNullish(lat)) return;
+    if (isNullish(lng)) return;
 
     axios.post<unknown>(`${env.VITE_API_URL}/weather`, { lat, lng }, {
       headers: {
@@ -46,27 +46,26 @@ export const GooglePlacesAutocomplete: React.FC = () => {
       const lat = place.geometry.location.lat();
       const lng = place.geometry.location.lng();
 
-      setLat(lat);
-      setLng(lng);
+      setCoords({ lat, lng });
       setAddress(place.formatted_address ?? '');
     } else {
-      const value = autocompleteRef.current?.get('place')?.name;
-      if (!value) return;
+      const name = Try(() =>
+        z.string().parse(autocompleteRef.current?.get('place')?.name,
+      ));
+      if (name.failure) return;
 
-      const parse_result = Try(() =>
+      const coordinates = Try(() =>
         z.string()
           .trim()
-          .regex(/^-?\d+(\.\d+)?, ?-?\d+(\.\d+)?$/)
-          .transform((val) => val.split(/, ?/).map(parseFloat))
-          .parse(value),
+          .regex(/^-?\d+(\.\d+)?, *-?\d+(\.\d+)?$/)
+          .transform((val) => val.split(/, */).map(parseFloat))
+          .parse(name.data),
       );
+      if (coordinates.failure) return;
+      const [lat, lng] = coordinates.data;
 
-      if (parse_result.failure) return;
-      const [lat, lng] = parse_result.data;
-
-      setLat(lat);
-      setLng(lng);
-      setAddress(value);
+      setCoords({ lat, lng });
+      setAddress(name.data);
     }
   };
 

@@ -30,16 +30,16 @@ app.post("/weather", async (c) => {
 	const cached_weather = await kv.get<string>([lat, lng]);
 	if (cached_weather.value) return c.text(cached_weather.value);
 
-	const weather_response = await Try(() =>
+	const get_weather = await Try(() =>
 		axios.get<unknown>(
 			`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&units=metric&appid=${env.OPEN_WEATHER_MAP_API_KEY}`,
 		).then(({ data }) => weather_schema.parse(data))
 	);
-	if (weather_response.failure) return c.json({ error: weather_response.error.message }, 500);
+	if (get_weather.failure) return c.json({ error: get_weather.error.message }, 500);
 
-	await kv.set([lat, lng], JSON.stringify(weather_response.data), { expireIn: 1000 * 60 * 60 * 4 });
+	await kv.set([lat, lng], JSON.stringify(get_weather.data), { expireIn: 1000 * 60 * 60 });
 
-	return c.json(weather_response.data);
+	return c.json(get_weather.data);
 });
 
 if (import.meta.main) {
