@@ -17,10 +17,8 @@ export type Weather = z.infer<typeof weather_schema>;
 export const useWeatherStore = create<{
   weather: Weather | null;
   setWeather: (weather: Weather) => void;
-  clearData: () => void;
 }>((set) => ({
     weather: null,
-    setWeather: (weather: Weather) => set({ weather }),
-    clearData: () => set({ weather: null }),
+    setWeather: (weather: Weather) => set((state) => ({ ...state, weather }), true),
   }),
 );
