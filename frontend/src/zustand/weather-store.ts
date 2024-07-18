@@ -20,7 +20,7 @@ export const useWeatherStore = create<{
   clearData: () => void;
 }>((set) => ({
     weather: null,
-    setWeather: (weather: Weather) => set({ weather }, true),
-    clearData: () => set({ weather: null }, true),
+    setWeather: (weather: Weather) => set({ weather }),
+    clearData: () => set({ weather: null }),
   }),
 );
