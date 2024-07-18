@@ -4,8 +4,8 @@ import axios from 'axios';
 import { useWeatherStore, weather_schema } from '../zustand/weather-store';
 import { env } from '../env';
 import { isNullish } from '../utils/functions/isNullish';
+import { libraries } from '../consts';
 
-const libraries: ['places'] = ['places'];
 const googleMapsApiKey = env.VITE_GOOGLE_PLACES_API_KEY;
 
 export const GooglePlacesAutocomplete: React.FC = () => {
@@ -58,7 +58,7 @@ export const GooglePlacesAutocomplete: React.FC = () => {
         type="search"
         placeholder="Enter an address"
         value={address}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+        onChange={(e) => setAddress(e.target.value)}
         className="rounded-t w-full p-3 box-border"
       />
     </Autocomplete>
